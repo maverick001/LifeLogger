@@ -9,6 +9,7 @@
 - **Daily Task Tracking**: Create and manage your recurring daily tasks.
 - **Star System**: Earn a star ⭐ for every task you complete each day.
 - **Progress Visualization**: View your performance with Daily Star charts and Weekly Recaps.
+  ![Daily Statistics](static/img/stat.png)
 - **Persistent History**: Your data is stored securely in the cloud, so you never lose your streak.
 - **Responsive Design**: Works great on desktop and mobile.
 - **Dark Mode**: Sleek UI with day/night toggle.
