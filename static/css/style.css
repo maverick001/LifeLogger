@@ -197,6 +197,12 @@ body::before {
     color: var(--text-secondary);
 }
 
+.header-date #current-date {
+    min-width: 260px;
+    text-align: center;
+    display: inline-block;
+}
+
 .header-right {
     display: flex;
     align-items: center;
