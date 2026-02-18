@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ## Project History
 
+- Docs: Resize screenshot to 50% scale (2026-02-18)
 - Docs: Resize screenshot to 25% scale (2026-02-18)
 - Docs: Add screenshot to README (2026-02-18)
 - UI improvement: Change logo text color to primary green (2026-02-18)
