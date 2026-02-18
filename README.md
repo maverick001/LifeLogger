@@ -2,6 +2,8 @@
 
 **LifeLogger** is a daily achievement tracker designed to help you build habits and track your productivity. Log your daily tasks, earn stars for completion, and visualize your progress over time with beautiful charts.
 
+![LifeLogger Dashboard](static/img/frontpage.png)
+
 ## Features
 
 - **Daily Task Tracking**: Create and manage your recurring daily tasks.
