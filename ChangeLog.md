@@ -12,8 +12,11 @@ All notable changes to this project will be documented in this file.
 
 - Remove sensitive files from tracking (2026-02-18)
 - UI improvement: UI upscale for Github repo (2026-02-18)
+
+* UI improvement: Change logo text color to primary green (2026-02-18)
+* UI improvement: Fix date navigation layout stability (2026-02-18)
+
 - Enhancement: add rate limiting (2026-02-15)
-- UI improvement: Fix theme switcher visibility (2026-02-15)
 - Enhancement: add SSL support for Aiven (2026-02-09)
 - Enhancement: drag-drop for re-positioning task items (2026-02-01)
 - UI improvement: position loading indicator (2026-02-01)
