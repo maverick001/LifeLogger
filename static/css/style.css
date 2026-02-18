@@ -1,0 +1,1062 @@
+/* ============================================
+   DailyLog - Modern CSS Design System
+   ============================================ */
+
+/* ============== CSS Variables ============== */
+:root {
+    /* Color Palette - Fresh Mint/Nature Theme */
+    --color-primary: #10b981;
+    /* Emerald 500 */
+    --color-primary-light: #34d399;
+    /* Emerald 400 */
+    --color-primary-dark: #059669;
+    /* Emerald 600 */
+    --color-primary-glow: rgba(16, 185, 129, 0.25);
+
+    /* Background Colors - Light Mode */
+    --bg-primary: #f0fdf4;
+    /* Very light green tint */
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e2e8f0;
+    /* Slate 200 - Neutral for borders */
+    --bg-card: linear-gradient(145deg, #ffffff 0%, #ecfdf5 100%);
+    /* Subtle gradient to mint */
+    --bg-glass: rgba(255, 255, 255, 0.85);
+
+    /* Text Colors - Light Mode */
+    --text-primary: #064e3b;
+    /* Dark Emerald */
+    --text-secondary: #334155;
+    /* Slate 700 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+
+    /* State Colors */
+    --color-success: #10b981;
+    --color-success-light: rgba(16, 185, 129, 0.15);
+    --color-danger: #ef4444;
+    --color-danger-light: rgba(239, 68, 68, 0.15);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(6, 78, 59, 0.05);
+    /* Tinted with green */
+    --shadow-md: 0 4px 12px rgba(6, 78, 59, 0.08);
+    --shadow-lg: 0 10px 25px rgba(6, 78, 59, 0.12);
+    --shadow-glow: 0 0 20px var(--color-primary-glow);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 400ms ease;
+
+    /* Font */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+[data-theme="dark"] {
+    /* Background Colors - Dark Mode */
+    --bg-primary: #0f172a;
+    /* Slate 900 */
+    --bg-secondary: #1e293b;
+    /* Slate 800 */
+    --bg-tertiary: #334155;
+    /* Slate 700 */
+    --bg-card: linear-gradient(145deg, #1e293b 0%, #111827 100%);
+    --bg-glass: rgba(15, 23, 42, 0.85);
+
+    /* Text Colors - Dark Mode */
+    --text-primary: #f8fafc;
+    /* Slate 50 */
+    --text-secondary: #cbd5e1;
+    /* Slate 300 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
+
+    /* Shadows - Darker for dark mode */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+    /* Adjust glow to be more visible */
+    --color-primary-glow: rgba(16, 185, 129, 0.15);
+}
+
+/* ============== Reset & Base ============== */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(52, 211, 153, 0.08), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(20, 184, 166, 0.08), transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+    transition: background 0.3s ease;
+}
+
+/* ============== Layout ============== */
+.app-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 24px 0;
+}
+
+/* ============== Header ============== */
+/* ============== Header ============== */
+.app-header {
+    background-color: var(--bg-glass);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-date {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: rgba(30, 41, 59, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background-color: var(--bg-tertiary);
+    transform: rotate(15deg);
+    color: var(--color-primary);
+}
+
+.date-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.date-icon {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    /* Ensure icon is clickable */
+    position: relative;
+    z-index: 10;
+}
+
+.date-icon:hover {
+    transform: scale(1.1);
+}
+
+#date-picker {
+    /* Hide the input but keep it in DOM for showPicker API */
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    display: block;
+    /* Important: must not be display:none for showPicker */
+    visibility: visible;
+    /* Important: must not be hidden for showPicker in some browsers */
+    pointer-events: none;
+    /* Prevent interference */
+    bottom: 0;
+    left: 0;
+}
+
+.date-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    line-height: 1;
+}
+
+.date-nav-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.date-nav-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* ============== Stats Banner ============== */
+.stats-banner {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+    margin-bottom: 32px;
+    border: 1px solid var(--bg-tertiary);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--bg-tertiary);
+}
+
+/* ============== Tasks Section ============== */
+.tasks-section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.progress-bar-container {
+    width: 120px;
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-normal);
+    width: 0%;
+}
+
+/* ============== Task List ============== */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.task-item {
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all var(--transition-normal);
+}
+
+.task-item:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+}
+
+.task-number {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 20px;
+}
+
+.task-item.completed {
+    background: var(--color-success-light);
+    border-color: var(--color-success);
+}
+
+.task-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.task-checkbox:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-glow);
+}
+
+.task-item.completed .task-checkbox {
+    background: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.task-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0);
+    transition: all var(--transition-fast);
+}
+
+.task-item.completed .task-checkbox::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    /* Prevent flex item from overflowing */
+}
+
+.task-name {
+    font-size: 1rem;
+    color: var(--text-primary);
+    transition: color var(--transition-fast);
+}
+
+.task-footnote {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-item.completed .task-name {
+    color: var(--color-success);
+}
+
+.task-star {
+    font-size: 1.25rem;
+    opacity: 0;
+    transform: scale(0);
+    transition: all var(--transition-normal);
+}
+
+.task-item.completed .task-star {
+    opacity: 1;
+    transform: scale(1);
+    animation: star-pop 0.4s ease;
+}
+
+@keyframes star-pop {
+    0% {
+        transform: scale(0) rotate(-180deg);
+    }
+
+    50% {
+        transform: scale(1.3) rotate(0deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.task-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    opacity: 0;
+}
+
+.task-item:hover .task-delete,
+.task-item:hover .task-edit,
+.task-item:hover .task-footnote-btn {
+    opacity: 1;
+}
+
+.task-footnote-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    opacity: 0;
+    /* Hidden by default until hover, unless it has footnote */
+}
+
+.task-footnote-btn.has-footnote {
+    opacity: 1;
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+.task-footnote-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--color-primary);
+}
+
+.task-delete:hover {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state-text {
+    font-size: 1rem;
+}
+
+/* ============== Add Task Form ============== */
+.add-task-form {
+    display: flex;
+    gap: 12px;
+}
+
+.add-task-form input {
+    flex: 1;
+    background: var(--bg-secondary);
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: all var(--transition-fast);
+}
+
+.add-task-form input::placeholder {
+    color: var(--text-muted);
+}
+
+.add-task-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
+
+.btn-add {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-add:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-add:active {
+    transform: scale(0.95);
+}
+
+/* ============== Statistics Section ============== */
+.stats-section {
+    margin-bottom: 40px;
+}
+
+.stats-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chart-select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.chart-select:hover {
+    border-color: var(--color-primary);
+}
+
+.chart-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.week-range {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.chart-container {
+    position: relative;
+    height: 200px;
+}
+
+.chart-container-pie {
+    height: 250px;
+}
+
+/* Weekly Legend */
+.weekly-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--bg-tertiary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-name {
+    color: var(--text-secondary);
+}
+
+.legend-count {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* ============== Footer ============== */
+.app-footer {
+    text-align: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--bg-tertiary);
+}
+
+.app-footer p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* ============== Toast Notification ============== */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transition: all var(--transition-normal);
+    z-index: 1000;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast.success {
+    border-color: var(--color-success);
+}
+
+.toast.error {
+    border-color: var(--color-danger);
+}
+
+.toast-icon {
+    font-size: 1.25rem;
+}
+
+.toast-message {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+/* ============== Modal ============== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+    z-index: 1001;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 400px;
+    width: 90%;
+    transform: scale(0.9);
+    transition: all var(--transition-normal);
+}
+
+.modal-overlay.show .modal {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.modal-icon {
+    font-size: 1.5rem;
+}
+
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-message {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.task-name-preview {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-cancel:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.btn-confirm-delete {
+    background: var(--color-danger);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    color: white;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-confirm-delete:hover {
+    background: #dc2626;
+}
+
+/* ============== Loading State ============== */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============== Responsive Design ============== */
+@media (max-width: 640px) {
+    .app-container {
+        padding: 0 16px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .stats-banner {
+        padding: 20px;
+        gap: 24px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .task-item {
+        padding: 14px 16px;
+    }
+
+    .task-delete {
+        opacity: 1;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .modal {
+        padding: 24px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-confirm-delete {
+        width: 100%;
+    }
+}
+
+/* ============== Scrollbar Styling ============== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* ============== Focus Styles ============== */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Modal Input */
+.modal-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #1e293b;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.modal-input:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Edit Button in Task List */
+.task-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    opacity: 0;
+    transform: translateX(-10px);
+    margin-left: auto;
+    /* Push to right, before delete button */
+    margin-right: 4px;
+}
+
+.task-item:hover .task-edit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.task-edit:hover {
+    background-color: #eff6ff;
+    transform: scale(1.1);
+}
+
+/* Adjust task-delete to not have margin-left: auto if edit button is there */
+.task-delete {
+    margin-left: 0;
+}
+
+/* SortableJS Styles */
+.task-item {
+    cursor: grab;
+    /* Indicate draggable */
+    touch-action: none;
+    /* Prevent scroll interference on touch if needed, but Sortable handles this mostly */
+}
+
+.task-item:active {
+    cursor: grabbing;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background: #e2e8f0;
+    border: 1px dashed #cbd5e1;
+}
+
+.sortable-drag {
+    opacity: 1;
+    background: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+}
+
+input:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

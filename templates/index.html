@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LifeLogger - Track your daily achievements and earn stars for completed tasks">
+    <title>LifeLogger - Daily Achievement Tracker</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- SortableJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">⭐</span>
+                    <h1>LifeLogger</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-date">
+                        <button class="date-nav-btn" id="prev-day-btn" title="Previous Day">◀</button>
+                        <div class="date-picker-container">
+                            <span class="date-icon" id="calendar-icon" title="View past dates">📅</span>
+                            <input type="date" id="date-picker">
+                        </div>
+                        <span id="current-date"></span>
+                        <button class="date-nav-btn" id="next-day-btn" title="Next Day">▶</button>
+                    </div>
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                        <span class="theme-icon">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Today's Stats Banner -->
+            <section class="stats-banner">
+                <div class="stat-item">
+                    <span class="stat-number" id="tasks-completed">0</span>
+                    <span class="stat-label">of <span id="tasks-total">0</span> Tasks for Today</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stars-today">0</span>
+                    <span class="stat-label">7-Day Avg</span>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h2>Today's Tasks</h2>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="task-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="task-list" id="task-list">
+                    <!-- Tasks will be dynamically inserted here -->
+                </div>
+
+                <!-- Add Task Form -->
+                <div class="add-task-form">
+                    <input type="text" id="new-task-input" placeholder="Add a new daily task..." maxlength="255"
+                        autocomplete="off">
+                    <button id="add-task-btn" class="btn-add" title="Add Task">
+                        <span>+</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="stats-section">
+                <h2>📊 Your Progress</h2>
+
+                <!-- Daily Stars Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Daily Stars</h3>
+                        <select id="days-select" class="chart-select">
+                            <option value="7">Last 7 Days</option>
+                            <option value="14">Last 14 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="daily-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Weekly Recap -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>This Week's Recap</h3>
+                        <span class="week-range" id="week-range"></span>
+                    </div>
+                    <div class="chart-container chart-container-pie">
+                        <canvas id="weekly-chart"></canvas>
+                    </div>
+                    <div class="weekly-legend" id="weekly-legend">
+                        <!-- Legend items will be inserted here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Keep earning those stars! ⭐</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-icon">✏️</span>
+                <h3>Edit Task</h3>
+            </div>
+            <p class="modal-message">Update the task name below:</p>
+            <input type="text" id="edit-task-input" class="modal-input" placeholder="Task name" maxlength="255">
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-edit">Cancel</button>
+                <button class="btn-confirm-delete" id="confirm-edit"
+                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-icon">🗑️</span>
+                <h3>Delete Task</h3>
+            </div>
+            <p class="modal-message">Are you sure you want to delete this task? Your earned stars will be preserved.</p>
+            <p class="task-name-preview" id="delete-task-name"></p>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-delete">Cancel</button>
+                <button class="btn-confirm-delete" id="confirm-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footnote Modal -->
+    <div class="modal-overlay" id="footnote-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-icon">📝</span>
+                <h3>Add Footnote</h3>
+            </div>
+            <p class="modal-message">Add a note for this task (preserves completion):</p>
+            <input type="text" id="footnote-input" class="modal-input" placeholder="Task footnote..." maxlength="500">
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-footnote">Cancel</button>
+                <button class="btn-confirm-delete" id="confirm-footnote"
+                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
