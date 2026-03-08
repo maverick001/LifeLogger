@@ -190,8 +190,9 @@ body::before {
     padding: 0.5rem 1rem;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-primary);
 }
 
 .header-date #current-date {
@@ -266,7 +267,7 @@ body::before {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 4px;
