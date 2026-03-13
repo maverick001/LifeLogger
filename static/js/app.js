@@ -202,9 +202,10 @@ function updateCurrentDateDisplay() {
     const today = new Date().toLocaleDateString('en-CA');
     const isToday = state.viewDate === today;
 
-    const bannerTitle = document.querySelector('.stats-banner .stat-label');
-    if (bannerTitle) {
-        bannerTitle.textContent = '7-Day Avg';
+    const starLabel = document.querySelector('#stars-today');
+    if (starLabel) {
+        const label = starLabel.parentElement.querySelector('.stat-label');
+        if (label) label.textContent = "7-Day Avg";
     }
 }
 
@@ -258,9 +259,13 @@ async function updateStatsDisplay() {
 }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    if (text === null || text === undefined) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 
@@ -306,14 +311,14 @@ function renderTasks() {
             </div>
             <span class="task-star">⭐</span>
             <button class="task-btn task-footnote-btn ${task.footnote ? 'has-footnote' : ''}" 
-                onclick="showFootnoteModal(${task.id}, '${escapeHtml(task.footnote || '')}')" 
+                onclick="showFootnoteModal(${task.id}, this.dataset.footnote)" data-footnote="${escapeHtml(task.footnote || '')}" 
                 title="${task.footnote ? 'Edit footnote' : 'Add footnote'}">
                 📝
             </button>
-            <button class="task-edit" onclick="showEditModal(${task.id}, '${escapeHtml(task.name)}')" title="Edit task">
+            <button class="task-edit" onclick="showEditModal(${task.id}, this.dataset.name)" data-name="${escapeHtml(task.name)}" title="Edit task">
                 ✏️
             </button>
-            <button class="task-delete" onclick="promptDeleteTask(${task.id}, '${escapeHtml(task.name)}')" title="Delete task">
+            <button class="task-delete" onclick="promptDeleteTask(${task.id}, this.dataset.name)" data-name="${escapeHtml(task.name)}" title="Delete task">
                 🗑️
             </button>
         </div>
