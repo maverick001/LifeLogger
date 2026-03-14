@@ -41,6 +41,6 @@ ENV/
 *.swo
 
 # Project specific
-./backup
+backup/
 .vercel
 *.log
