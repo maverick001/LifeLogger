@@ -401,6 +401,20 @@ body::before {
     border-color: var(--color-success);
 }
 
+.task-item.negative-task:not(.completed) {
+    border-color: var(--color-danger);
+}
+
+.task-item.negative-task:not(.completed) .task-name,
+.task-item.negative-task:not(.completed) .task-number,
+.task-item.negative-task:not(.completed) .task-footnote {
+    color: var(--color-danger);
+}
+
+.task-item.negative-task:not(.completed) .task-checkbox {
+    border-color: var(--color-danger);
+}
+
 .task-checkbox {
     width: 24px;
     height: 24px;

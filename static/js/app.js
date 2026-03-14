@@ -237,7 +237,21 @@ function changeDate(offset) {
 }
 
 async function updateStatsDisplay() {
-    const completedCount = state.tasks.filter(t => t.completed_today).length;
+    let completedCount = 0;
+    state.tasks.forEach(t => {
+        if (t.name === 'No BIG MISTAKE or LESSION') {
+            if (t.completed_today) {
+                completedCount += 1; // It was ticked, increment
+            } else {
+                completedCount -= 1; // It was NOT ticked, decrement
+            }
+        } else {
+            if (t.completed_today) {
+                completedCount += 1;
+            }
+        }
+    });
+
     const totalCount = state.tasks.length;
 
     // elements.starsToday.textContent = completedCount; // Old logic
@@ -250,11 +264,12 @@ async function updateStatsDisplay() {
         console.error('Failed to update average stats:', error);
         elements.starsToday.textContent = '-';
     }
+    
     elements.tasksCompleted.textContent = completedCount;
     elements.tasksTotal.textContent = totalCount;
 
     // Update progress bar
-    const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+    const progressPercent = totalCount > 0 ? (Math.max(0, completedCount) / totalCount) * 100 : 0;
     elements.taskProgress.style.width = `${progressPercent}%`;
 }
 
@@ -301,8 +316,12 @@ function renderTasks() {
         return;
     }
 
-    elements.taskList.innerHTML = state.tasks.map((task, index) => `
-        <div class="task-item ${task.completed_today ? 'completed' : ''}" data-task-id="${task.id}">
+    const normalTasks = state.tasks.filter(t => t.name !== 'No BIG MISTAKE or LESSION');
+    const negativeTasks = state.tasks.filter(t => t.name === 'No BIG MISTAKE or LESSION');
+    const displayTasks = [...normalTasks, ...negativeTasks];
+
+    elements.taskList.innerHTML = displayTasks.map((task, index) => `
+        <div class="task-item ${task.completed_today ? 'completed' : ''} ${task.name === 'No BIG MISTAKE or LESSION' ? 'negative-task' : ''}" data-task-id="${task.id}">
             <span class="task-number">${index + 1}.</span>
             <div class="task-checkbox" onclick="toggleTask(${task.id})"></div>
             <div class="task-content">
