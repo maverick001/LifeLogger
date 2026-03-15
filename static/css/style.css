@@ -945,10 +945,22 @@ body::before {
 
     .task-item {
         padding: 14px 16px;
+        gap: 8px;
     }
 
+    .task-star {
+        display: none;
+    }
+
+    .task-footnote-btn,
+    .task-edit,
     .task-delete {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
         opacity: 1;
+        transform: none;
+        flex-shrink: 0;
     }
 
     .chart-header {
