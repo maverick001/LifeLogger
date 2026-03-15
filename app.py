@@ -129,6 +129,22 @@ def check_and_migrate_db():
             cursor.execute("ALTER TABLE daily_task_completions ADD COLUMN footnote TEXT DEFAULT NULL")
             conn.commit()
             print("[OK] Migration successful: 'footnote' column added")
+            
+        # Check if 'is_completed' column exists in 'daily_task_completions' table
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM information_schema.columns 
+            WHERE table_schema = DATABASE() 
+            AND table_name = 'daily_task_completions' 
+            AND column_name = 'is_completed'
+        """)
+        exists = cursor.fetchone()[0]
+        
+        if not exists:
+            print("[INFO] Applying migration: Adding 'is_completed' column to 'daily_task_completions' table...")
+            cursor.execute("ALTER TABLE daily_task_completions ADD COLUMN is_completed BOOLEAN DEFAULT TRUE")
+            conn.commit()
+            print("[OK] Migration successful: 'is_completed' column added")
         
     except mysql.connector.Error as err:
         print(f"[WARN] Database migration failed: {err}")
@@ -222,7 +238,7 @@ def get_tasks(cursor, conn):
             t.id,
             t.name,
             t.created_at,
-            CASE WHEN dtc.id IS NOT NULL THEN TRUE ELSE FALSE END as completed_today,
+            CASE WHEN dtc.id IS NOT NULL AND dtc.is_completed = TRUE THEN TRUE ELSE FALSE END as completed_today,
             dtc.footnote
         FROM tasks t
         LEFT JOIN daily_task_completions dtc 
@@ -386,10 +402,10 @@ def save_footnote(cursor, conn, task_id):
             (footnote, existing_record['id'])
         )
     else:
-        # Create new record (this inherently marks it as complete/starred)
+        # Create new record (this uncouples it, setting is_completed to false initially)
         cursor.execute("""
-            INSERT INTO daily_task_completions (task_id, task_name, completed_date, footnote)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO daily_task_completions (task_id, task_name, completed_date, footnote, is_completed)
+            VALUES (%s, %s, %s, %s, FALSE)
         """, (task_id, task['name'], target_date, footnote))
         
     conn.commit()
@@ -430,16 +446,22 @@ def complete_task(cursor, conn, task_id):
     
     # Check if already completed on that date
     cursor.execute(
-        "SELECT id FROM daily_task_completions WHERE task_id = %s AND completed_date = %s",
+        "SELECT id, is_completed FROM daily_task_completions WHERE task_id = %s AND completed_date = %s",
         (task_id, target_date)
     )
-    if cursor.fetchone():
-        return jsonify({'message': 'Task already completed on this date'}), 200
-    
+    record = cursor.fetchone()
+    if record:
+        if record['is_completed']:
+            return jsonify({'message': 'Task already completed on this date'}), 200
+        else:
+            cursor.execute("UPDATE daily_task_completions SET is_completed = TRUE WHERE id = %s", (record['id'],))
+            conn.commit()
+            return jsonify({'message': 'Star earned!', 'task_id': task_id, 'completed_date': target_date}), 201
+            
     # Insert completion record
     query = """
-        INSERT INTO daily_task_completions (task_id, task_name, completed_date)
-        VALUES (%s, %s, %s)
+        INSERT INTO daily_task_completions (task_id, task_name, completed_date, is_completed)
+        VALUES (%s, %s, %s, TRUE)
     """
     cursor.execute(query, (task_id, task['name'], target_date))
     conn.commit()
@@ -467,15 +489,20 @@ def uncomplete_task(cursor, conn, task_id):
         target_date = date.today().isoformat()
     
     cursor.execute(
-        "DELETE FROM daily_task_completions WHERE task_id = %s AND completed_date = %s",
+        "SELECT id, footnote FROM daily_task_completions WHERE task_id = %s AND completed_date = %s",
         (task_id, target_date)
     )
-    conn.commit()
-    
-    if cursor.rowcount > 0:
-        return jsonify({'message': 'Completion removed'})
-    else:
+    record = cursor.fetchone()
+    if not record:
         return jsonify({'message': 'No completion found for this date'}), 404
+        
+    if record['footnote']:
+        cursor.execute("UPDATE daily_task_completions SET is_completed = FALSE WHERE id = %s", (record['id'],))
+    else:
+        cursor.execute("DELETE FROM daily_task_completions WHERE id = %s", (record['id'],))
+        
+    conn.commit()
+    return jsonify({'message': 'Completion removed'})
 
 
 # ============== Statistics API Routes ==============
@@ -496,7 +523,7 @@ def get_daily_stats(cursor, conn):
             completed_date,
             COUNT(*) as star_count
         FROM daily_task_completions
-        WHERE completed_date BETWEEN %s AND %s
+        WHERE completed_date BETWEEN %s AND %s AND is_completed = TRUE
         GROUP BY completed_date
         ORDER BY completed_date ASC
     """
@@ -555,7 +582,7 @@ def get_weekly_stats(cursor, conn):
         cursor.execute("""
             SELECT COUNT(*) as star_count
             FROM daily_task_completions
-            WHERE task_id = %s AND completed_date BETWEEN %s AND %s
+            WHERE task_id = %s AND completed_date BETWEEN %s AND %s AND is_completed = TRUE
         """, (task['id'], start_date.isoformat(), end_date.isoformat()))
         
         count = cursor.fetchone()['star_count']
@@ -589,7 +616,7 @@ def get_today_stats(cursor, conn):
     
     # Get completed tasks today
     cursor.execute(
-        "SELECT COUNT(*) as completed FROM daily_task_completions WHERE completed_date = %s",
+        "SELECT COUNT(*) as completed FROM daily_task_completions WHERE completed_date = %s AND is_completed = TRUE",
         (today,)
     )
     completed_today = cursor.fetchone()['completed']
@@ -631,7 +658,7 @@ def get_average_stats(cursor, conn):
     query = """
         SELECT COUNT(*) as total_stars
         FROM daily_task_completions
-        WHERE completed_date BETWEEN %s AND %s
+        WHERE completed_date BETWEEN %s AND %s AND is_completed = TRUE
     """
     cursor.execute(query, (start_date.isoformat(), end_date.isoformat()))
     result = cursor.fetchone()

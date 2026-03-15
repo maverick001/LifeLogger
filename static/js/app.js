@@ -653,12 +653,6 @@ async function saveTaskFootnote() {
         const taskIndex = state.tasks.findIndex(t => t.id === state.taskToFootnote);
         if (taskIndex !== -1) {
             state.tasks[taskIndex].footnote = footnote;
-            // Also mark as completed since backend does it? 
-            // My backend logic: INSERT creates completion. UPDATE maintains it.
-            // So if it was not completed, it is now.
-            // However, backend ONLY inserts/updates. It inserts a completion record.
-            // So yes, it becomes completed.
-            state.tasks[taskIndex].completed_today = true;
         }
 
         hideFootnoteModal();
