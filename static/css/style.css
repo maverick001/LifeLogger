@@ -1053,9 +1053,7 @@ a:focus-visible {
 /* SortableJS Styles */
 .task-item {
     cursor: grab;
-    /* Indicate draggable */
-    touch-action: none;
-    /* Prevent scroll interference on touch if needed, but Sortable handles this mostly */
+    touch-action: manipulation;
 }
 
 .task-item:active {
