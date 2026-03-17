@@ -22,7 +22,6 @@ let weeklyChart = null;
 // ============== DOM Elements ==============
 const elements = {
     currentDate: document.getElementById('current-date'),
-    calendarIcon: document.getElementById('calendar-icon'),
     datePicker: document.getElementById('date-picker'),
     themeToggle: document.getElementById('theme-toggle'),
     starsToday: document.getElementById('stars-today'),
@@ -822,8 +821,8 @@ function setupEventListeners() {
         }
     });
 
-    // Manually trigger date picker on icon click
-    elements.calendarIcon.addEventListener('click', () => {
+    // Manually trigger date picker on date click
+    elements.currentDate.addEventListener('click', () => {
         try {
             // Modern API
             if (elements.datePicker.showPicker) {

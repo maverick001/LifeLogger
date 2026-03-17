@@ -200,6 +200,13 @@ body::before {
     text-align: center;
     display: inline-block;
     color: #f59e0b;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.header-date #current-date:hover {
+    color: var(--color-primary);
+    transform: scale(1.02);
 }
 
 .header-right {
@@ -234,17 +241,7 @@ body::before {
     align-items: center;
 }
 
-.date-icon {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    /* Ensure icon is clickable */
-    position: relative;
-    z-index: 10;
-}
-
-.date-icon:hover {
-    transform: scale(1.1);
-}
+/* date-icon removed */
 
 #date-picker {
     /* Hide the input but keep it in DOM for showPicker API */
